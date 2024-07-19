@@ -1,15 +1,17 @@
 package ru.cft;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) {
+        File file = new File("E:\\test.txt");
         FileLineReader lineReader = new FileLineReader();
-        File file = new File("E:\\Work\\Scientific_Work\\TUSUR\\Libraries\\Current_Article\\Introduction.txt");
-//        ByteBuffer buffer = lineReader.readFile(0, 2);
-        System.out.println(lineReader.getLinesOnBytes(file,201));
-        System.out.println(lineReader.getLinesOnStrings(file,4));
-        System.out.println(lineReader.getLinesOnByteRange(file,2,201));
-        System.out.println(lineReader.getLinesOnStringsRange(file,1,2));
+        StringParser parser = new StringParser();
+        LineMapper mapper = new LineMapper(parser);
+        List<String> linesOnStrings = lineReader.getLinesOnStrings(file, Integer.MAX_VALUE);
+        Map<StringType, List<String>> map = mapper.map(linesOnStrings);
+        System.out.println(map);
     }
 }
