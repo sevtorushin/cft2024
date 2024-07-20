@@ -4,41 +4,72 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FileManager {
 
-//    private String integerFileName = "integers";
-//    private String floatFileName = "floats";
-//    private String stringFileName = "strings";
     private final String prefix;
     private final String path;
+    private boolean appendMode;
+    private final String fileExtension;
 
     private final FileLineWriter writer;
 
-    public FileManager(String prefix, String path) {
+    public FileManager(String prefix, String path, boolean appendMode, String fileExtension) {
         this.prefix = prefix;
         this.path = path;
+        this.appendMode = appendMode;
+        this.fileExtension = fileExtension;
         this.writer = new FileLineWriter();
+        prepareFiles();
     }
 
-    private File createFile(String fileName, String prefix, String path){
-        if (fileName.contains("."))
+    private File createFile(String fileName) {
+        if (fileName.matches(".\\.*"))
             throw new IllegalArgumentException("Invalid file name");
-        Path filePath = null;
+        Path filePath = Path.of(path, prefix + fileName + "." + fileExtension);
         try {
-            filePath = Files.createFile(Path.of(path, prefix + fileName + ".txt"));
+            if (!Files.exists(filePath))
+                Files.createFile(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new File(filePath.toUri());
     }
 
-    public void allocate(Map<StringType, List<String>> data){
-        data.entrySet().forEach(entry -> {
-            File file = createFile(entry.getKey().name().toLowerCase() + "s", prefix, path);
-            writer.writeLines(file, entry.getValue(), true);
+    public void allocate(Map<StringType, List<String>> data) {
+        data.forEach((key, value) -> {
+            if (!value.isEmpty()) {
+                File file = createFile(key.name().toLowerCase() + "s");
+                writer.writeLines(file, value, true);
+            }
         });
+    }
+
+    private void prepareFiles() {
+        if (!appendMode) {
+            List<String> list = Arrays.stream(StringType.values())
+                    .map(stringType -> prefix + stringType.name().toLowerCase() + "s." + fileExtension).collect(Collectors.toList());
+            Path root = Path.of(path);
+            try {
+                Files.list(root)
+                        .map(path1 -> path1.getFileName().toString())
+                        .filter(list::contains)
+                        .map(s -> Path.of(path, s))
+                        .forEach(p -> {
+                            try {
+                                if (Files.exists(p))
+                                    Files.delete(p);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

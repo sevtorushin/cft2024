@@ -10,11 +10,9 @@ public class App {
         StringParser parser = new StringParser();
         LineMapper mapper = new LineMapper(parser);
         FileLineReader lineReader = new FileLineReader();
-        List<String> linesOnStrings = lineReader.getLinesOnStrings(inputFile, Integer.MAX_VALUE);
+        FileManager fileManager = new FileManager("result_", "e:\\new", true, fileExtention);
+        List<String> linesOnStrings = lineReader.getLinesOnStringsRange(inputFile, 1, Integer.MAX_VALUE);
         Map<StringType, List<String>> map = mapper.map(linesOnStrings);
-        System.out.println(map);
-
-        FileManager fileManager = new FileManager("", "e:\\");
         fileManager.allocate(map);
     }
 }
