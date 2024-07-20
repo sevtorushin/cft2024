@@ -7,7 +7,7 @@ public class StringParser {
     }
 
     public boolean isDouble(String expression){
-        return expression.matches(StringType.DOUBLE.getRegexp());
+        return expression.matches(StringType.FLOAT.getRegexp());
     }
 
     public StringType parse(String expression){
