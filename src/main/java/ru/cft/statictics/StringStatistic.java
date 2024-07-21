@@ -1,6 +1,7 @@
 package ru.cft.statictics;
 
 import lombok.ToString;
+import ru.cft.StringType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 @ToString(callSuper = true)
 public class StringStatistic extends Statistic<BigDecimal> {
 
-    public StringStatistic() {
-        super(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+    public StringStatistic(StringType type) {
+        super(type, BigDecimal.ZERO);
     }
 
     @Override
@@ -25,10 +26,24 @@ public class StringStatistic extends Statistic<BigDecimal> {
                 .map(integer -> new BigDecimal(String.valueOf(integer)))
                 .orElse(BigDecimal.ZERO);
         BigDecimal tempCount = new BigDecimal(String.valueOf(data.size()));
-        if (getMaxValue().compareTo(tempMaxLength) < 0)
+        if (maxValue == null)
             maxValue = tempMaxLength;
-        if (getMinValue().compareTo(tempMinLength) > 0)
+        else if (maxValue.compareTo(tempMaxLength) < 0)
+            maxValue = tempMaxLength;
+        if (minValue == null)
             minValue = tempMinLength;
-        count = getCount().add(tempCount);
+        else if (minValue.compareTo(tempMinLength) > 0)
+            minValue = tempMinLength;
+        count = count.add(tempCount);
+    }
+
+    @Override
+    public void getFullStatistic() {
+        String header = String.format("Full statistic for '%s'", type);
+        String report = String.format("Amount: %s\nMinimum length: %s\nMaximum length: %s",
+                count, minValue, maxValue);
+        System.out.println(header);
+        System.out.println(report);
+        System.out.println("----------------------------------------------");
     }
 }

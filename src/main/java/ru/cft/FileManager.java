@@ -1,5 +1,8 @@
 package ru.cft;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +16,8 @@ public class FileManager {
 
     private final String prefix;
     private final String path;
+    @Getter
+    @Setter
     private boolean appendMode;
     private final String fileExtension;
 
@@ -51,13 +56,13 @@ public class FileManager {
 
     private void prepareFiles() {
         if (!appendMode) {
-            List<String> list = Arrays.stream(StringType.values())
+            List<String> fileNamesList = Arrays.stream(StringType.values())
                     .map(stringType -> prefix + stringType.name().toLowerCase() + "s." + fileExtension).collect(Collectors.toList());
             Path root = Path.of(path);
             try {
                 Files.list(root)
                         .map(path1 -> path1.getFileName().toString())
-                        .filter(list::contains)
+                        .filter(fileNamesList::contains)
                         .map(s -> Path.of(path, s))
                         .forEach(p -> {
                             try {

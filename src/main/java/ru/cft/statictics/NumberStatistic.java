@@ -2,6 +2,7 @@ package ru.cft.statictics;
 
 import lombok.Getter;
 import lombok.ToString;
+import ru.cft.StringType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,8 +17,8 @@ public class NumberStatistic extends Statistic<BigDecimal> {
     @ToString.Include
     private BigDecimal sum;
 
-    public NumberStatistic() {
-        super(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+    public NumberStatistic(StringType type) {
+        super(type, BigDecimal.ZERO);
         this.sum = BigDecimal.ZERO;
     }
 
@@ -44,12 +45,26 @@ public class NumberStatistic extends Statistic<BigDecimal> {
         BigDecimal tempCount = new BigDecimal(String.valueOf(result.size()));
         BigDecimal tempMaxValue = Collections.max(result);
         BigDecimal tempMinValue = Collections.min(result);
-        if (getMaxValue().compareTo(tempMaxValue) < 0)
+        if (maxValue == null)
             maxValue = tempMaxValue;
-        if (getMinValue().compareTo(tempMinValue) > 0)
+        else if (maxValue.compareTo(tempMaxValue) < 0)
+            maxValue = tempMaxValue;
+        if (minValue == null)
             minValue = tempMinValue;
-        count = getCount().add(tempCount);
-        sum = getSum().add(tempSum);
+        else if (minValue.compareTo(tempMinValue) > 0)
+            minValue = tempMinValue;
+        count = count.add(tempCount);
+        sum = sum.add(tempSum);
+    }
+
+    @Override
+    public void getFullStatistic() {
+        String header = String.format("Full statistic for '%s'", type);
+        String report = String.format("Amount: %s\nMinimum value: %s\nMaximum value: %s\nAverage value: %s\nSum: %s\n",
+                count, minValue, maxValue, getAvgValue(), sum);
+        System.out.println(header);
+        System.out.println(report);
+        System.out.println("----------------------------------------------");
     }
 
     @ToString.Include

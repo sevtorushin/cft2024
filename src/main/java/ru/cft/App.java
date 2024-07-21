@@ -13,18 +13,21 @@ public class App {
         StringParser parser = new StringParser();
         LineMapper mapper = new LineMapper(parser);
         FileLineReader lineReader = new FileLineReader();
-        NumberStatistic integerStatistic = new NumberStatistic();
-        NumberStatistic floatStatistic = new NumberStatistic();
-        StringStatistic stringStatistic = new StringStatistic();
+        NumberStatistic integerStatistic = new NumberStatistic(StringType.INTEGER);
+        NumberStatistic floatStatistic = new NumberStatistic(StringType.FLOAT);
+        StringStatistic stringStatistic = new StringStatistic(StringType.STRING);
         FileManager fileManager = new FileManager("result_", "e:\\new", false, "txt");
         List<String> linesOnStrings = lineReader.getLinesOnStringsRange(inputFile, 1, Integer.MAX_VALUE);
         Map<StringType, List<String>> map = mapper.map(linesOnStrings);
         integerStatistic.refresh(map.get(StringType.INTEGER));
         floatStatistic.refresh(map.get(StringType.FLOAT));
         stringStatistic.refresh(map.get(StringType.STRING));
-        System.out.println(integerStatistic);
-        System.out.println(floatStatistic);
-        System.out.println(stringStatistic);
+        integerStatistic.getShortStatistic();
+        floatStatistic.getShortStatistic();
+        stringStatistic.getShortStatistic();
+        integerStatistic.getFullStatistic();
+        floatStatistic.getFullStatistic();
+        stringStatistic.getFullStatistic();
         fileManager.allocate(map);
     }
 }
