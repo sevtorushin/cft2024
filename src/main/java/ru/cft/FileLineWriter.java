@@ -8,9 +8,9 @@ import java.util.List;
 
 public class FileLineWriter {
 
-    public void writeLines(File file, List<String> lines, boolean append){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))){
-            for(String s : lines) {
+    public void writeLines(File file, List<String> lines, boolean append) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
+            for (String s : lines) {
                 writer.write(s);
                 writer.newLine();
                 writer.flush();

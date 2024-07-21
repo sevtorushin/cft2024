@@ -4,7 +4,7 @@ import java.util.*;
 
 public class LineMapper {
 
-    private StringParser parser;
+    private final StringParser parser;
 
     public LineMapper(StringParser parser) {
         this.parser = parser;

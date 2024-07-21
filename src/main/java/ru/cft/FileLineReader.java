@@ -53,12 +53,16 @@ public class FileLineReader {
 
     public List<String> getLinesOnStringsRange(File file, int fromString, int stringCount) {
         List<String> result = new ArrayList<>();
+        if (fromString < 1 || stringCount < 0) {
+            System.err.println(String.format("Wrong range:\n'fromString': %s\n'stringCount': %s", fromString, stringCount));
+            return result;
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             result = reader.lines().skip(fromString - 1).limit(stringCount).collect(Collectors.toList());
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("File auto-close error\n" + e.getMessage());
         }
         return result;
     }

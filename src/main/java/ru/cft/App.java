@@ -1,5 +1,8 @@
 package ru.cft;
 
+import ru.cft.statictics.NumberStatistic;
+import ru.cft.statictics.StringStatistic;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +13,18 @@ public class App {
         StringParser parser = new StringParser();
         LineMapper mapper = new LineMapper(parser);
         FileLineReader lineReader = new FileLineReader();
-        FileManager fileManager = new FileManager("result_", "e:\\new", true, fileExtention);
+        NumberStatistic integerStatistic = new NumberStatistic();
+        NumberStatistic floatStatistic = new NumberStatistic();
+        StringStatistic stringStatistic = new StringStatistic();
+        FileManager fileManager = new FileManager("result_", "e:\\new", false, "txt");
         List<String> linesOnStrings = lineReader.getLinesOnStringsRange(inputFile, 1, Integer.MAX_VALUE);
         Map<StringType, List<String>> map = mapper.map(linesOnStrings);
+        integerStatistic.refresh(map.get(StringType.INTEGER));
+        floatStatistic.refresh(map.get(StringType.FLOAT));
+        stringStatistic.refresh(map.get(StringType.STRING));
+        System.out.println(integerStatistic);
+        System.out.println(floatStatistic);
+        System.out.println(stringStatistic);
         fileManager.allocate(map);
     }
 }
