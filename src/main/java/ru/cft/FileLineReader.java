@@ -1,5 +1,9 @@
 package ru.cft;
 
+import lombok.NonNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -12,8 +16,10 @@ import java.util.stream.Collectors;
 public class FileLineReader {
 
     private final String lineSeparator = System.lineSeparator();
+    private static final Logger log = LogManager.getLogger(FileLineReader.class.getSimpleName());
 
 
+    @Deprecated
     public List<String> getLinesOnBytes(File file, int bytes) {
         List<String> result = new ArrayList<>();
         String s;
@@ -34,6 +40,7 @@ public class FileLineReader {
         return result;
     }
 
+    @Deprecated
     public List<String> getLinesOnStrings(File file, int stringCount) {
         List<String> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -46,23 +53,24 @@ public class FileLineReader {
         return result;
     }
 
+    @Deprecated
     public List<String> getLinesOnByteRange(File file, int fromByte, int byteCount) {
         ByteBuffer tempBuffer = readFile(file, fromByte, byteCount);
         return toListStrings(tempBuffer);
     }
 
-    public List<String> getLinesOnStringsRange(File file, int fromString, int stringCount) {
+    public List<String> getLinesOnStringsRange(@NonNull File file, int fromString, int stringCount) {
         List<String> result = new ArrayList<>();
         if (fromString < 1 || stringCount < 0) {
-            System.err.println(String.format("Wrong range:\n'fromString': %s\n'stringCount': %s", fromString, stringCount));
+            log.warn(String.format("Wrong range:\n'fromString': %s\n'stringCount': %s", fromString, stringCount));
             return result;
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             result = reader.lines().skip(fromString - 1).limit(stringCount).collect(Collectors.toList());
         } catch (FileNotFoundException e) {
-            System.err.println(e.getMessage());
+            log.warn(String.format("File '%s' not found", file), e);
         } catch (IOException e) {
-            System.err.println("File auto-close error\n" + e.getMessage());
+            log.error(String.format("File '%s' auto-close error", file), e);
         }
         return result;
     }

@@ -1,7 +1,10 @@
 package ru.cft.statictics;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.cft.StringType;
 
 import java.math.BigDecimal;
@@ -17,25 +20,27 @@ public class NumberStatistic extends Statistic<BigDecimal> {
     @ToString.Include
     private BigDecimal sum;
 
+    private static final Logger log = LogManager.getLogger(NumberStatistic.class.getSimpleName());
+
     public NumberStatistic(StringType type) {
         super(type, BigDecimal.ZERO);
         this.sum = BigDecimal.ZERO;
     }
 
-    private List<BigDecimal> convert(List<String> data) {
+    private List<BigDecimal> convert(@NonNull List<String> data) {
         List<BigDecimal> result = new ArrayList<>();
         for (String s : data) {
             try {
                 result.add(new BigDecimal(s.replace(',', '.')));
             } catch (NumberFormatException e) {
-                System.err.println(String.format("'%s' is not number.\n%s", s, e.getMessage()));
+                log.warn(String.format("'%s' is not number.\n%s", s, e.getMessage()));
             }
         }
         return result;
     }
 
     @Override
-    public void refresh(List<String> data) {
+    public void refresh(@NonNull List<String> data) {
         if (data.isEmpty())
             return;
         List<BigDecimal> result = convert(data);

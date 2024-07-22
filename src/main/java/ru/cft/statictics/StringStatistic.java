@@ -1,5 +1,6 @@
 package ru.cft.statictics;
 
+import lombok.NonNull;
 import lombok.ToString;
 import ru.cft.StringType;
 
@@ -14,7 +15,7 @@ public class StringStatistic extends Statistic<BigDecimal> {
     }
 
     @Override
-    public void refresh(List<String> data) {
+    public void refresh(@NonNull List<String> data) {
         BigDecimal tempMaxLength = data.stream()
                 .map(String::length)
                 .max(Integer::compareTo)

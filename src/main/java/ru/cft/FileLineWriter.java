@@ -1,5 +1,9 @@
 package ru.cft;
 
+import lombok.NonNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,7 +12,9 @@ import java.util.List;
 
 public class FileLineWriter {
 
-    public void writeLines(File file, List<String> lines, boolean append) {
+    private static final Logger log = LogManager.getLogger(FileLineWriter.class.getSimpleName());
+
+    public void writeLines(@NonNull File file, @NonNull List<String> lines, boolean append) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
             for (String s : lines) {
                 writer.write(s);
@@ -16,7 +22,7 @@ public class FileLineWriter {
                 writer.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(String.format("File '%s' auto-close error", file), e);
         }
     }
 }

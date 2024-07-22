@@ -1,8 +1,10 @@
 package ru.cft;
 
+import lombok.NonNull;
+
 public class StringParser {
 
-    public StringType parse(String expression) {
+    public StringType parse(@NonNull String expression) {
         for (StringType type : StringType.values()) {
             if (expression.matches(type.getRegexp()))
                 return type;

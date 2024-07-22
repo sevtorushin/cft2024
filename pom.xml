@@ -27,7 +27,9 @@
         <!--Lombok properties-->
         <lombok.version>1.18.30</lombok.version>
         <!--Junit properties-->
-        <junit.version>4.13</junit.version>
+        <junit.version>5.8.2</junit.version>
+
+        <log4j.version>2.17.1</log4j.version>
     </properties>
 
     <dependencies>
@@ -55,8 +57,14 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
