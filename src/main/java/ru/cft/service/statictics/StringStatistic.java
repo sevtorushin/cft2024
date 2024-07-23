@@ -1,8 +1,8 @@
-package ru.cft.statictics;
+package ru.cft.service.statictics;
 
 import lombok.NonNull;
 import lombok.ToString;
-import ru.cft.StringType;
+import ru.cft.entity.StringType;
 
 import java.math.BigDecimal;
 import java.util.List;

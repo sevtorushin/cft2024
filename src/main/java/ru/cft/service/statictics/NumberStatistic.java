@@ -1,11 +1,11 @@
-package ru.cft.statictics;
+package ru.cft.service.statictics;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.cft.StringType;
+import ru.cft.entity.StringType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

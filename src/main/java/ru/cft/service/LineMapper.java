@@ -1,17 +1,18 @@
-package ru.cft;
+package ru.cft.service;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.cft.entity.StringType;
 
 import java.util.*;
 
+@Service
+@RequiredArgsConstructor
 public class LineMapper {
 
     @NonNull
     private final StringParser parser;
-
-    public LineMapper(StringParser parser) {
-        this.parser = parser;
-    }
 
     public Map<StringType, List<String>> map(@NonNull List<String> inputCollection) {
         Map<StringType, List<String>> result = fill();

@@ -1,4 +1,4 @@
-package ru.cft;
+package ru.cft.entity;
 
 import lombok.Getter;
 

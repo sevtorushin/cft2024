@@ -1,8 +1,8 @@
-package ru.cft.statictics;
+package ru.cft.service.statictics;
 
 import lombok.Getter;
 import lombok.ToString;
-import ru.cft.StringType;
+import ru.cft.entity.StringType;
 
 import java.util.List;
 
