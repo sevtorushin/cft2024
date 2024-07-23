@@ -5,10 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -23,7 +21,12 @@ public class FileLineWriter {
                 writer.newLine();
                 writer.flush();
             }
-        } catch (IOException e) {
+        } catch (AccessDeniedException e) {
+            log.warn("123");
+        } catch (FileNotFoundException e){
+            log.warn(String.format("File '%s' - access denied. The file will not be written.", file));
+        }
+        catch (IOException e) {
             log.error(String.format("File '%s' auto-close error", file), e);
         }
     }

@@ -91,7 +91,10 @@ public class FileManager {
                             try {
                                 if (Files.exists(p))
                                     Files.delete(p);
-                            } catch (IOException e) {
+                            } catch (AccessDeniedException e){
+                                log.warn(String.format("File '%s' - access denied. The file cannot be deleted.", p));
+                            }
+                            catch (IOException e) {
                                 log.error(e);
                             }
                         });

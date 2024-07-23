@@ -3,6 +3,8 @@ package ru.cft.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.cli.CommandLine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.cft.entity.StringType;
@@ -27,6 +29,8 @@ public class ApplicationRunner {
     private final NumberStatistic floatStatistic;
     private final StringStatistic stringStatistic;
 
+    private static final Logger log = LogManager.getLogger(ApplicationRunner.class.getSimpleName());
+
     public static ApplicationRunner init(Class<?> configurationClass, String[] args) {
         ApplicationRunner.args = args;
         AnnotationConfigApplicationContext springContext = new AnnotationConfigApplicationContext(configurationClass);
@@ -35,12 +39,16 @@ public class ApplicationRunner {
 
     public void start() {
         List<String> filePaths = cmd.getArgList();
+        if (filePaths.isEmpty()) {
+            log.warn("No input file specified");
+            return;
+        }
         long fromStringNumber = 1L;
         long stringAmount = 1000_000L;
         for (String filepath : filePaths) {
             File file = new File(filepath);
             if (!file.exists()) {
-                System.err.println(String.format("Input file %s not exists", file));
+                log.warn(String.format("Input file %s not exists", file));
                 return;
             }
             List<String> readStrings;
