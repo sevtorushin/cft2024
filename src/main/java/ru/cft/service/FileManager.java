@@ -47,9 +47,17 @@ public class FileManager {
             this.fileExtension = "txt";
         else
             this.fileExtension = fileExtension;
-//        this.writer = new FileLineWriter();
         prepareDirectory();
         prepareFiles();
+    }
+
+    public void allocate(Map<StringType, List<String>> data) {
+        data.forEach((key, value) -> {
+            if (!value.isEmpty()) {
+                File file = createFile(key.name().toLowerCase() + "s");
+                writer.writeLines(file, value, true);
+            }
+        });
     }
 
     private File createFile(String fileName) {
@@ -67,15 +75,6 @@ public class FileManager {
             filePath = Path.of(path, prefix + fileName + "." + fileExtension);
         }
         return new File(filePath.toUri());
-    }
-
-    public void allocate(Map<StringType, List<String>> data) {
-        data.forEach((key, value) -> {
-            if (!value.isEmpty()) {
-                File file = createFile(key.name().toLowerCase() + "s");
-                writer.writeLines(file, value, true);
-            }
-        });
     }
 
     private void prepareFiles() {
@@ -127,10 +126,14 @@ public class FileManager {
     }
 
     private boolean isValidFileExtension(String fileExtension) {
-        return fileExtension.matches("(\\w|\\d)+");
+        if (fileExtension == null)
+            return false;
+        else return fileExtension.matches("(\\w|\\d)+");
     }
 
     private boolean isValidPrefix(String prefix) {
-        return prefix.matches("[^.*<>?+:/|\"\\s\\\\]+");
+        if (prefix == null)
+            return false;
+        else return prefix.matches("[^.*<>?+:/|\"\\s\\\\]+");
     }
 }

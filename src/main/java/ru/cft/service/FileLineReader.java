@@ -21,14 +21,14 @@ public class FileLineReader {
     private static final Logger log = LogManager.getLogger(FileLineReader.class.getSimpleName());
 
 
-    public List<String> getLinesOnStringsRange(@NonNull File file, int fromString, int stringCount) {
+    public List<String> getLinesOnStringsRange(@NonNull File file, long fromString, long stringAmount) {
         List<String> result = new ArrayList<>();
-        if (fromString < 1 || stringCount < 0) {
-            log.warn(String.format("Wrong range:\n'fromString': %s\n'stringCount': %s", fromString, stringCount));
+        if (fromString < 1 || stringAmount < 0) {
+            log.warn(String.format("Wrong range:\n'fromString': %s\n'stringAmount': %s", fromString, stringAmount));
             return result;
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            result = reader.lines().skip(fromString - 1).limit(stringCount).collect(Collectors.toList());
+            result = reader.lines().skip(fromString - 1).limit(stringAmount).collect(Collectors.toList());
         } catch (FileNotFoundException e) {
             log.warn(String.format("File '%s' not found", file), e);
         } catch (IOException e) {
@@ -59,10 +59,10 @@ public class FileLineReader {
     }
 
     @Deprecated
-    public List<String> getLinesOnStrings(File file, int stringCount) {
+    public List<String> getLinesOnStrings(File file, int stringAmount) {
         List<String> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            result = reader.lines().limit(stringCount).collect(Collectors.toList());
+            result = reader.lines().limit(stringAmount).collect(Collectors.toList());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -72,8 +72,8 @@ public class FileLineReader {
     }
 
     @Deprecated
-    public List<String> getLinesOnByteRange(File file, int fromByte, int byteCount) {
-        ByteBuffer tempBuffer = readFile(file, fromByte, byteCount);
+    public List<String> getLinesOnByteRange(File file, int fromByte, int byteAmount) {
+        ByteBuffer tempBuffer = readFile(file, fromByte, byteAmount);
         return toListStrings(tempBuffer);
     }
 
@@ -87,11 +87,11 @@ public class FileLineReader {
         return result;
     }
 
-    private ByteBuffer readFile(File file, int fromByte, int byteCount) {
-        ByteBuffer tempBuffer = ByteBuffer.allocate(byteCount);
+    private ByteBuffer readFile(File file, int fromByte, int byteAmount) {
+        ByteBuffer tempBuffer = ByteBuffer.allocate(byteAmount);
         try (FileChannel fileChannel = FileChannel.open(Path.of(file.toURI()), StandardOpenOption.READ)) {
             fileChannel.read(tempBuffer, fromByte);
-            if (fileChannel.size() != byteCount)
+            if (fileChannel.size() != byteAmount)
                 trimBuffer(tempBuffer);
             tempBuffer.flip();
         } catch (FileNotFoundException e) {

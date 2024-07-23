@@ -11,6 +11,8 @@ import ru.cft.service.FileManager;
 import ru.cft.service.statictics.NumberStatistic;
 import ru.cft.service.statictics.StringStatistic;
 
+import java.util.Optional;
+
 @org.springframework.context.annotation.Configuration
 @ComponentScan("ru.cft.service")
 @RequiredArgsConstructor
@@ -18,10 +20,11 @@ public class Configuration {
 
     @Bean
     public FileManager fileManager(CommandLine cmd, FileLineWriter fileLineWriter) {
-        String filesPath = cmd.getOptionValue("o");
-        String filesPrefix = cmd.getOptionValue("p");
+        Optional<String> filesPath = Optional.ofNullable(cmd.getOptionValue("o"));
+        Optional<String> filesPrefix = Optional.ofNullable(cmd.getOptionValue("p"));
         boolean appendMode = cmd.hasOption("a");
-        FileManager fileManager = new FileManager(filesPrefix, filesPath, appendMode, "txt");
+        FileManager fileManager = new FileManager(
+                filesPrefix.orElse(""), filesPath.orElse(""), appendMode, "txt");
         fileManager.setWriter(fileLineWriter);
         return fileManager;
     }
@@ -42,18 +45,19 @@ public class Configuration {
     }
 
     @Bean
-    public CommandLine cmd(){
+    public CommandLine cmd() {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
             cmd = parser.parse(cliOptions(), ApplicationRunner.getArgs());
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
+            System.exit(-1);
         }
         return cmd;
     }
 
-    public Options cliOptions(){
+    public Options cliOptions() {
         Options options = new Options();
         Option pathOption = new Option("o", true, "Path of output files");
         Option prefixOption = new Option("p", true, "Prefix of output files");
