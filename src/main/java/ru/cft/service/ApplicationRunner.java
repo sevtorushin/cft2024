@@ -36,7 +36,7 @@ public class ApplicationRunner {
     public void start() {
         List<String> filePaths = cmd.getArgList();
         long fromStringNumber = 1L;
-        long stringAmount = 3L;
+        long stringAmount = 1000_000L;
         for (String filepath : filePaths) {
             File file = new File(filepath);
             if (!file.exists()) {
